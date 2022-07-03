@@ -5,6 +5,10 @@
  */
 package com.system.gui;
 
+import com.system.db.ItemDB;
+import com.system.model.CategoryDropDown;
+import java.util.List;
+
 /**
  *
  * @author Acer
@@ -16,6 +20,8 @@ public class ItemUI extends javax.swing.JFrame {
      */
     public ItemUI() {
         initComponents();
+        loadCategoryDropdown();
+        
     }
 
     /**
@@ -181,7 +187,7 @@ public class ItemUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<CategoryDropDown> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -197,4 +203,13 @@ public class ItemUI extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
+
+    private void loadCategoryDropdown() {
+        ItemDB item = new ItemDB();
+        List<CategoryDropDown> list = item.getCategoryForDropdown();
+        for(CategoryDropDown obj : list){
+            jComboBox1.addItem(new CategoryDropDown(obj.getCategoryId(), obj.getCategoryName()));
+        }
+        
+    }
 }
