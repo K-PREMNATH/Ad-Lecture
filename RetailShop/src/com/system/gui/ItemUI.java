@@ -5,9 +5,15 @@
  */
 package com.system.gui;
 
+import com.system.db.IItem;
 import com.system.db.ItemDB;
 import com.system.model.CategoryDropDown;
+import com.system.model.InsertUpdateItemRes;
+import com.system.model.Item;
 import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,13 +21,18 @@ import java.util.List;
  */
 public class ItemUI extends javax.swing.JFrame {
 
+    private int categoryId;
+    private int itemId;
+
     /**
      * Creates new form ItemUI
      */
     public ItemUI() {
         initComponents();
+        setTableCustomProperty();
         loadCategoryDropdown();
-        
+        loadItemTable();
+
     }
 
     /**
@@ -86,18 +97,43 @@ public class ItemUI extends javax.swing.JFrame {
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, 100, -1));
 
         jButton1.setText("SAVE");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 470, 120, -1));
 
         jButton2.setText("UPDATE");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 520, 120, -1));
 
         jButton3.setText("DELETE");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 570, 120, -1));
 
         jButton4.setText("CANCEL");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 470, 160, -1));
 
         jButton5.setText("CLEAR");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 520, 160, -1));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createCompoundBorder(null, javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED)));
@@ -111,7 +147,7 @@ public class ItemUI extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ITEM_ID", "ITEM_NAME", "ITEM_DESCRIPTION", "SPECIFIC_CODE", "ITEM_RATE", "CATEGORY_ID", "CATEGORY_NAME"
+                "", "ITEM_NAME", "ITEM_DESCRIPTION", "SPECIFIC_CODE", "ITEM_RATE", "CATEGORY_ID", "CATEGORY_NAME"
             }
         ) {
             Class[] types = new Class [] {
@@ -127,6 +163,11 @@ public class ItemUI extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(jTable1);
@@ -145,6 +186,127 @@ public class ItemUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        JTable eventSource = (JTable) evt.getSource();
+        int row = eventSource.rowAtPoint(evt.getPoint());
+        String itemIdStr = eventSource.getModel().getValueAt(row, 0).toString();
+        String itemName = eventSource.getModel().getValueAt(row, 1).toString();
+        String itemDesc = eventSource.getModel().getValueAt(row, 2).toString();
+        String specifyCode = eventSource.getModel().getValueAt(row, 3).toString();
+        String itemRate = eventSource.getModel().getValueAt(row, 4).toString();
+        String catIdStr = eventSource.getModel().getValueAt(row, 5).toString();
+        String catName = eventSource.getModel().getValueAt(row, 6).toString();
+
+        setItemId(Integer.parseInt(itemIdStr));
+        setCategoryId(Integer.parseInt(catIdStr));
+
+        jTextField1.setText(itemName);
+        jTextArea1.setText(itemDesc);
+        jTextField2.setText(specifyCode);
+        jTextField3.setText(itemRate);
+
+        CategoryDropDown catObj = new CategoryDropDown();
+        catObj.setCategoryId(getCategoryId());
+        catObj.setCategoryName(catName);
+
+        jComboBox1.getModel().setSelectedItem(catObj);
+
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String itemName = jTextField1.getText();
+        String itemDesc = jTextArea1.getText();
+        int spCode = Integer.parseInt(jTextField2.getText());
+        double itemRate = Double.valueOf(jTextField3.getText());
+        CategoryDropDown selectedModel = (CategoryDropDown) jComboBox1.getModel().getSelectedItem();
+
+        ItemDB itemDB = new ItemDB();
+        InsertUpdateItemRes flag = itemDB.insertUpdateItem(0, itemName, itemDesc, spCode, itemRate, selectedModel.getCategoryId());
+        if (flag.isRes()) {
+            JOptionPane.showMessageDialog(rootPane, "Successfully Updated!!!");
+            jTextField1.setText("");
+            jTextArea1.setText("");
+            jTextField2.setText("");
+            jTextField3.setText("");
+            loadItemTable();
+        } else {
+            JOptionPane.showMessageDialog(rootPane, flag.getMessage());
+            jTextField1.setText("");
+            jTextArea1.setText("");
+            jTextField2.setText("");
+            jTextField3.setText("");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        jTextField1.setText("");
+        jTextArea1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+
+        loadItemTable();
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        if (getItemId() == 0) {
+            JOptionPane.showMessageDialog(rootPane, "Please select the item");
+        } else {
+            String itemName = jTextField1.getText();
+            String itemDesc = jTextArea1.getText();
+            int spCode = Integer.parseInt(jTextField2.getText());
+            double itemRate = Double.valueOf(jTextField3.getText());
+            CategoryDropDown selectedModel = (CategoryDropDown) jComboBox1.getModel().getSelectedItem();
+
+            ItemDB itemDB = new ItemDB();
+            InsertUpdateItemRes flag = itemDB.insertUpdateItem(getItemId(), itemName, itemDesc, spCode, itemRate, selectedModel.getCategoryId());
+            if (flag.isRes()) {
+                JOptionPane.showMessageDialog(rootPane, "Successfully Updated!!!");
+                jTextField1.setText("");
+                jTextArea1.setText("");
+                jTextField2.setText("");
+                jTextField3.setText("");
+                loadItemTable();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, flag.getMessage());
+                jTextField1.setText("");
+                jTextArea1.setText("");
+                jTextField2.setText("");
+                jTextField3.setText("");
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        ItemDB itemDB = new ItemDB();
+        InsertUpdateItemRes obj = itemDB.deleteItem(getItemId());
+        if (obj.isRes()) {
+            JOptionPane.showMessageDialog(rootPane, "Successfully Deleted!!!");
+            jTextField1.setText("");
+            jTextArea1.setText("");
+            jTextField2.setText("");
+            jTextField3.setText("");
+            loadItemTable();
+        } else {
+            JOptionPane.showMessageDialog(rootPane,
+                    (obj.getMessage() != null && !obj.getMessage().equals("")) ? obj.getMessage() : "Unable To Delete"
+            );
+            jTextField1.setText("");
+            jTextArea1.setText("");
+            jTextField2.setText("");
+            jTextField3.setText("");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -207,9 +369,63 @@ public class ItemUI extends javax.swing.JFrame {
     private void loadCategoryDropdown() {
         ItemDB item = new ItemDB();
         List<CategoryDropDown> list = item.getCategoryForDropdown();
-        for(CategoryDropDown obj : list){
+        for (CategoryDropDown obj : list) {
             jComboBox1.addItem(new CategoryDropDown(obj.getCategoryId(), obj.getCategoryName()));
         }
-        
+
+    }
+
+    public void setTableCustomProperty() {
+        jTable1.getColumnModel().getColumn(0).setWidth(0);
+        jTable1.getColumnModel().getColumn(0).setMaxWidth(0);
+
+        jTable1.getColumnModel().getColumn(5).setWidth(0);
+        jTable1.getColumnModel().getColumn(5).setMaxWidth(0);
+    }
+
+    public void loadItemTable() {
+        ItemDB cdb = new ItemDB();
+        List<Item> list = cdb.getAllItems();
+        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+        tableModel.setRowCount(0);
+        for (Item obj : list) {
+            tableModel.addRow(new Object[]{
+                obj.getItemId(),
+                obj.getItemName(),
+                obj.getItemDesc(),
+                obj.getSpecifyCode(),
+                obj.getItemRate(),
+                obj.getCategoryId(),
+                obj.getCategoryName()
+            });
+        }
+    }
+
+    /**
+     * @return the categoryId
+     */
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    /**
+     * @param categoryId the categoryId to set
+     */
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    /**
+     * @return the itemId
+     */
+    public int getItemId() {
+        return itemId;
+    }
+
+    /**
+     * @param itemId the itemId to set
+     */
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
     }
 }
