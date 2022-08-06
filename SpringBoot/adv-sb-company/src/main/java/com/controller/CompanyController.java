@@ -1,28 +1,35 @@
 package com.controller;
 
+import com.business.CompanyBusiness;
 import com.dto.request.UserInsertReq;
 import com.dto.request.UserUpdateReq;
 import com.dto.response.UserInsertRes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.logging.Logger;
 
 @RestController
 public class CompanyController {
 
+    Logger LOGGER = Logger.getLogger(CompanyController.class.getName());
+
+    @Autowired
+    CompanyBusiness companyBusiness;
+
     @PostMapping("/user/insert/record")
     public UserInsertRes insertUserRecord(@RequestBody UserInsertReq userInsertReq){
-        System.out.println(userInsertReq.toString());
-        UserInsertRes userInsertRes = new UserInsertRes();
-        userInsertRes.setStatusCode(1000);
-        userInsertRes.setMessage("Success");
+        LOGGER.info("insertUserRecord----------->"+userInsertReq.toString());
+
+        UserInsertRes userInsertRes = companyBusiness.insertUserRecord(userInsertReq);
         return userInsertRes;
     }
 
     @PostMapping("/user/update/record")
     public UserInsertRes updateUserRecord(@RequestBody UserUpdateReq userUpdateReq){
-        System.out.println(userUpdateReq.toString());
-        UserInsertRes userInsertRes = new UserInsertRes();
-        userInsertRes.setStatusCode(1000);
-        userInsertRes.setMessage("Success");
+        LOGGER.info("updateUserRecord----------->"+userUpdateReq.toString());
+
+        UserInsertRes userInsertRes = companyBusiness.updateUserRecord(userUpdateReq);
         return userInsertRes;
     }
 
