@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "4e78c7fb-515b-4cb7-910c-e5bb580f2f8d",
+		"name": "ICBT-Adv",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22489993"
+	},
+	"item": [
+		{
+			"name": "user/insert/record",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userDetailId\": 2,\r\n    \"firstName\": \"Premnath\",\r\n    \"lastName\": \"Prem\",\r\n    \"emailAddress\": \"rexprem1991@gmail.com\",\r\n    \"mobileNumber\": \"0777728630\",\r\n    \"password\": \"345345345\",\r\n    \"address\": \"Colombo\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9093/user/update/record",
+					"host": [
+						"localhost"
+					],
+					"port": "9093",
+					"path": [
+						"user",
+						"update",
+						"record"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8081/user/update/record",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userDetailId\":1,\r\n    \"firstName\": \"Prem\",\r\n    \"lastName\": \"KP\",\r\n    \"emailAddress\": \"rexprem1991@gmail.com\",\r\n    \"mobileNumber\": \"0777728630\",\r\n    \"password\": \"121212\",\r\n    \"address\": \"Jaffna\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/user/update/record",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"user",
+						"update",
+						"record"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/get/list",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:9093/user/get/list",
+					"host": [
+						"localhost"
+					],
+					"port": "9093",
+					"path": [
+						"user",
+						"get",
+						"list"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

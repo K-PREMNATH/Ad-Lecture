@@ -1,12 +1,15 @@
 package com.controller;
 
 import com.business.CompanyBusiness;
+import com.dto.request.GetUserReq;
 import com.dto.request.UserInsertReq;
 import com.dto.request.UserUpdateReq;
+import com.dto.response.GetUserRes;
 import com.dto.response.UserInsertRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
@@ -33,21 +36,23 @@ public class CompanyController {
         return userInsertRes;
     }
 
-    @GetMapping("/user/get/record")
-    public UserInsertRes getUserRecord(@RequestParam("id") String userDetailId){
-        System.out.println("ID : "+userDetailId);
-        UserInsertRes userInsertRes = new UserInsertRes();
-        userInsertRes.setStatusCode(1000);
-        userInsertRes.setMessage("Success");
-        return userInsertRes;
+    @GetMapping("/user/get/detail")
+    public GetUserRes getUserRecord(@RequestParam("id") String userDetailId){
+        LOGGER.info("getUserRecord----------->userDetailId : "+userDetailId);
+        GetUserRes getUserRes = companyBusiness.getUserRecord(userDetailId);
+        return getUserRes;
     }
 
-    @GetMapping("/user/delete/record/{userDetailId}")
-    public UserInsertRes deleteUserRecord(@PathVariable String userDetailId){
-        System.out.println("ID : "+userDetailId);
-        UserInsertRes userInsertRes = new UserInsertRes();
-        userInsertRes.setStatusCode(1000);
-        userInsertRes.setMessage("Success");
-        return userInsertRes;
+    @PostMapping("/user/get/record")
+    public GetUserRes getUserRecord(@RequestBody GetUserReq getUserReq){
+        LOGGER.info("getUserRecord----------->"+getUserReq.toString());
+        GetUserRes getUserRes = companyBusiness.getUserRecord(getUserReq);
+        return getUserRes;
+    }
+
+    @PostMapping("/user/get/list")
+    public List<GetUserRes> getUserList(){
+        List<GetUserRes> list = companyBusiness.getUserList();
+        return list;
     }
 }

@@ -11,7 +11,7 @@
 	<groupId>com</groupId>
 	<artifactId>adv-sb-company</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>adv-sb-company</name>
 	<description>Adv programming application</description>
 	<properties>
