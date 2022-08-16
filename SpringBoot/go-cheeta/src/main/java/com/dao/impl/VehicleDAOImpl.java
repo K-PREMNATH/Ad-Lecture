@@ -27,19 +27,17 @@ public class VehicleDAOImpl implements VehicleDAO {
     @Transactional
     public CommonResponse createVehicleCategory(VehicleCategoryReq vehicleCategoryReq) {
         CommonResponse commonResponse = null;
-        String errorMessage = "";
         int isInserted = 0;
         try{
             isInserted = jdbcTemplate.update(ApplicationDAOContant.IVehicle.INSERT_VEHICLE_CATEGORY,
                     vehicleCategoryReq.getVehicleCategoryName());
         }catch (Exception exception){
-            errorMessage = exception.toString();
             exception.printStackTrace();
         }
         commonResponse = new CommonResponse();
         commonResponse.setRes(isInserted == 1? true : false);
         commonResponse.setStatusCode(isInserted == 1? 1000 : 1036);
-        commonResponse.setMessage(isInserted == 1? "Success" : errorMessage);
+        commonResponse.setMessage(isInserted == 1? "Success" : "Unable to create the category, please try again...!");
 
         return commonResponse;
     }
