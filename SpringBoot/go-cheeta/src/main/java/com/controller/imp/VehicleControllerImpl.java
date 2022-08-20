@@ -8,11 +8,13 @@ import com.dto.request.VehicleDetailReq;
 import com.dto.response.CommonResponse;
 import com.dto.response.GeneralResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin("*")
 public class VehicleControllerImpl implements VehicleController {
 
     @Autowired
