@@ -5,6 +5,15 @@ public class CommonResponse {
     private int statusCode;
     private String message;
 
+    public CommonResponse() {
+    }
+
+    public CommonResponse(boolean res, int statusCode, String message) {
+        this.res = res;
+        this.statusCode = statusCode;
+        this.message = message;
+    }
+
     public boolean getRes() {
         return res;
     }
