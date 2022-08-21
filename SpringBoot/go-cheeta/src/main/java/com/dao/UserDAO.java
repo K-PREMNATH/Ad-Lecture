@@ -1,7 +1,12 @@
 package com.dao;
 
+import com.dto.request.CustomerLoginReq;
 import com.dto.request.UserRegistrationReq;
 import com.dto.response.GeneralResponse;
+import com.dto.response.UserRegistrationRes;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 public interface UserDAO {
     /**
@@ -10,4 +15,10 @@ public interface UserDAO {
      * @return
      */
     GeneralResponse userRegistration(UserRegistrationReq userRegistrationReq);
+
+    public UserRegistrationRes getUserByEmail(String emailAddress);
+
+    public String passcodeEncrypt(String passcode) throws NoSuchAlgorithmException, IOException;
+
+    public int customerLogin(CustomerLoginReq customerLoginReq);
 }

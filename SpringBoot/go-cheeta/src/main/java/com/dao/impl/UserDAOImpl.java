@@ -1,6 +1,7 @@
 package com.dao.impl;
 
 import com.dao.UserDAO;
+import com.dto.request.CustomerLoginReq;
 import com.dto.request.UserRegistrationReq;
 import com.dto.response.GeneralResponse;
 import com.dto.response.UserRegistrationRes;
@@ -10,6 +11,9 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -23,6 +27,7 @@ public class UserDAOImpl implements UserDAO {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     @Override
     public GeneralResponse userRegistration(UserRegistrationReq userRegistrationReq) {
@@ -47,7 +52,9 @@ public class UserDAOImpl implements UserDAO {
                 response = GeneralResponse.generateResponse(
                         getUserByEmail(userRegistrationReq.getEmailAddress()),
                         1000,
-                        "Success"
+                        "Customer "+
+                                userRegistrationReq.getFirstName() +" - "+userRegistrationReq.getLastName()+
+                                " created successfully...!"
                 );
             }else {
                 response = GeneralResponse.generateResponse(null,1001,"Failed to register the Customer...!");
@@ -86,9 +93,35 @@ public class UserDAOImpl implements UserDAO {
         return registrationRes;
     }
 
-    public String passcodeEncrypt(String passcode) throws NoSuchAlgorithmException {
+    public String passcodeEncrypt(String passcode) throws NoSuchAlgorithmException, IOException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        return digest.digest(
-                passcode.getBytes(StandardCharsets.UTF_8)).toString();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        outputStream.write(passcode.getBytes("UTF-8"));
+        byte[] unhash = outputStream.toByteArray();
+        byte[] digestHash = digest.digest(unhash);
+        return bytesToHex(digestHash);
+    }
+
+    public static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+    @Override
+    public int customerLogin(CustomerLoginReq customerLoginReq) {
+        int loginStatus = 0;
+        try{
+            String QUERY = "select count(*) from userdetail " +
+                    "where EmailAddress = '"+customerLoginReq.getUsername()+"' and UserPassword = '"+customerLoginReq.getPasscode()+"'";
+            loginStatus = jdbcTemplate.queryForObject(QUERY,Integer.class);
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }
+        return loginStatus;
     }
 }

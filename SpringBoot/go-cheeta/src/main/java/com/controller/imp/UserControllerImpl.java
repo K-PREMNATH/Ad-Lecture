@@ -2,6 +2,7 @@ package com.controller.imp;
 
 import com.business.UserBusiness;
 import com.controller.UserController;
+import com.dto.request.CustomerLoginReq;
 import com.dto.request.UserRegistrationReq;
 import com.dto.response.GeneralResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +22,11 @@ public class UserControllerImpl implements UserController {
     @PostMapping("/create/customer")
     public GeneralResponse userRegistration(@RequestBody UserRegistrationReq userRegistrationReq) {
         return userBusiness.userRegistration(userRegistrationReq);
+    }
+
+    @Override
+    @PostMapping("/login/customer")
+    public GeneralResponse customerLogin(@RequestBody CustomerLoginReq customerLoginReq) {
+        return userBusiness.customerLogin(customerLoginReq);
     }
 }

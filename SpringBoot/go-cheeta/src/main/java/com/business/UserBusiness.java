@@ -1,5 +1,6 @@
 package com.business;
 
+import com.dto.request.CustomerLoginReq;
 import com.dto.request.UserRegistrationReq;
 import com.dto.response.GeneralResponse;
 
@@ -10,4 +11,6 @@ public interface UserBusiness {
      * @return
      */
     GeneralResponse userRegistration(UserRegistrationReq userRegistrationReq);
+
+    GeneralResponse customerLogin(CustomerLoginReq customerLoginReq);
 }
