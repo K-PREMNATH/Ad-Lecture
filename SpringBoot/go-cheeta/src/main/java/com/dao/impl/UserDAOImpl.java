@@ -113,7 +113,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public int customerLogin(CustomerLoginReq customerLoginReq) {
+    public int userLogin(CustomerLoginReq customerLoginReq) {
         int loginStatus = 0;
         try{
             String QUERY = "select count(*) from userdetail " +

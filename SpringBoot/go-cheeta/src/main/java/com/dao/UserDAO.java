@@ -20,5 +20,5 @@ public interface UserDAO {
 
     public String passcodeEncrypt(String passcode) throws NoSuchAlgorithmException, IOException;
 
-    public int customerLogin(CustomerLoginReq customerLoginReq);
+    public int userLogin(CustomerLoginReq customerLoginReq);
 }

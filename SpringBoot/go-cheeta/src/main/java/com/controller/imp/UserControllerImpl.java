@@ -25,8 +25,8 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @PostMapping("/login/customer")
-    public GeneralResponse customerLogin(@RequestBody CustomerLoginReq customerLoginReq) {
-        return userBusiness.customerLogin(customerLoginReq);
+    @PostMapping("/login/user")
+    public GeneralResponse userLogin(@RequestBody CustomerLoginReq customerLoginReq) {
+        return userBusiness.userLogin(customerLoginReq);
     }
 }

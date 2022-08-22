@@ -12,7 +12,10 @@ public interface UserController {
      */
     public GeneralResponse userRegistration(UserRegistrationReq userRegistrationReq);
 
-    public GeneralResponse customerLogin(CustomerLoginReq customerLoginReq);
-
-    //public GeneralResponse adminLogin(CustomerLoginReq customerLoginReq);
+    /**
+     * customerLogin
+     * @param customerLoginReq
+     * @return
+     */
+    public GeneralResponse userLogin(CustomerLoginReq customerLoginReq);
 }

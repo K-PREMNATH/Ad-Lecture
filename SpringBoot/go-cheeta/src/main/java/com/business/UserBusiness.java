@@ -12,5 +12,5 @@ public interface UserBusiness {
      */
     GeneralResponse userRegistration(UserRegistrationReq userRegistrationReq);
 
-    GeneralResponse customerLogin(CustomerLoginReq customerLoginReq);
+    GeneralResponse userLogin(CustomerLoginReq customerLoginReq);
 }

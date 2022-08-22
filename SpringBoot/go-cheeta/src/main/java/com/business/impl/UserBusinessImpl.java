@@ -49,13 +49,13 @@ public class UserBusinessImpl implements UserBusiness {
     }
 
     @Override
-    public GeneralResponse customerLogin(CustomerLoginReq customerLoginReq) {
+    public GeneralResponse userLogin(CustomerLoginReq customerLoginReq) {
         GeneralResponse generalResponse = null;
         try {
             String encryptedPassword = userDAO.passcodeEncrypt(customerLoginReq.getPasscode());
             String encryptedPassword2 = userDAO.passcodeEncrypt(encryptedPassword);
             customerLoginReq.setPasscode(encryptedPassword2);
-            int loginStatus = userDAO.customerLogin(customerLoginReq);
+            int loginStatus = userDAO.userLogin(customerLoginReq);
             if(loginStatus == 1){
                 UserRegistrationRes registrationRes  = userDAO.getUserByEmail(customerLoginReq.getUsername());
                 generalResponse = new GeneralResponse(registrationRes,1000,"Successfully logged in...!");
