@@ -91,6 +91,8 @@ color:#fff;
 
 
 
+
+
     </style>
 
 
@@ -119,10 +121,12 @@ color:#fff;
             <div class="col-md-4 loginHeader">L O G I N</div>
         </div>
         <form class="row" id="signinform">
-            <div class="col-md-9 formStyle"><input type="text" class="textField" placeholder="Email" name="username"/></div>
+            <div class="col-md-9 formStyle"><input type="text" class="textField" placeholder="Email" name="username"/>
+            </div>
             <div class="col-md formStyle align-seld-end"><i class="glyphicon glyphicon-envelope"></i></div>
             <div class="w-100"></div>
-            <div class="col-md-9 formStyle"><input type="password" class="textField" placeholder="Password" name="passcode"/></div>
+            <div class="col-md-9 formStyle"><input type="password" class="textField" placeholder="Password"
+                                                   name="passcode"/></div>
             <div class="col-md formStyle align-seld-end"><i class="glyphicon glyphicon-lock"></i></div>
             <div class="w-100"></div>
             <div class="col-md-9 aStyle"><a href="#" class="aStyle">Forgot password ?</a></div>
@@ -153,7 +157,8 @@ color:#fff;
             <div class="col-md formStyle align-seld-end"><i class="glyphicon glyphicon-envelope"></i></div>
             <div class="w-100"></div>
 
-            <div class="col-md-9 formStyle"><input type="text" class="textField" placeholder="Address" name="address" required/>
+            <div class="col-md-9 formStyle"><input type="text" class="textField" placeholder="Address" name="address"
+                                                   required/>
             </div>
             <div class="col-md formStyle align-seld-end"><i class="glyphicon glyphicon-home"></i></div>
             <div class="w-100"></div>
@@ -247,7 +252,7 @@ $('#signinform').submit(function(e){
     console.log(values);
 
     $.ajax({
-         url: 'http://localhost:8085/login/customer',
+         url: 'http://localhost:8085/login/user',
          type: 'POST',
          headers: {
           "Content-Type": "application/json"
@@ -258,7 +263,14 @@ $('#signinform').submit(function(e){
              console.log(data);
              if(data.statusCode == 1000){
                 alert(data.message);
-                window.location.href="home.html";
+                if(data.data.userType == 2){
+                    localStorage.setItem("userId", data.data.userId);
+                    window.location.href="customer.html";
+                }
+                if(data.userType == 1){
+                    localStorage.setItem("userId", data.data.userId);
+                    window.location.href="admin.html";
+                }
              }else{
                 alert(data.message);
              }
@@ -266,6 +278,8 @@ $('#signinform').submit(function(e){
      });
     console.log('end');
 });
+
+
 
 
 

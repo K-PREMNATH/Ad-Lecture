@@ -1,60 +1,64 @@
-package com.controller;
+package com.dao;
 
 import com.dto.request.*;
 import com.dto.response.GeneralResponse;
+import com.dto.response.LocationRes;
+import com.dto.response.TripRes;
 
-public interface TripController {
+import java.util.List;
+
+public interface TripDAO {
     /**
      * createNewTrip
      * @param createTripReq
      * @return
      */
-    public GeneralResponse createNewTrip(CreateTripReq createTripReq);
+    GeneralResponse createNewTrip(CreateTripReq createTripReq);
 
     /**
      * editTrip
      * @param editTripReq
      * @return
      */
-    public GeneralResponse editTrip(EditTripReq editTripReq);
+    GeneralResponse editTrip(EditTripReq editTripReq);
 
     /**
      * assignDriverToTrip
      * @param assignDriverReq
      * @return
      */
-    public GeneralResponse assignDriverToTrip(AssignDriverReq assignDriverReq);
+    GeneralResponse assignDriverToTrip(AssignDriverReq assignDriverReq);
 
     /**
      * cancelTrip
      * @param cancelTripReq
      * @return
      */
-    public GeneralResponse cancelTrip(CancelTripReq cancelTripReq);
+    GeneralResponse cancelTrip(CancelTripReq cancelTripReq);
 
     /**
      * getTripList
      * @return
      */
-    public GeneralResponse getTripList();
+    List<TripRes> getTripList();
 
     /**
      * getTripDetail
      * @param tripDetailReq
      * @return
      */
-    public GeneralResponse getTripDetail(TripDetailReq tripDetailReq);
+    TripRes getTripDetail(TripDetailReq tripDetailReq);
 
     /**
      * getLocationList
      * @return
      */
-    public GeneralResponse getLocationList();
+    List<LocationRes> getLocationList();
 
     /**
      * getLocationListByCity
      * @param getLocationByCityReq
      * @return
      */
-    public GeneralResponse getLocationListByCity(GetLocationByCityReq getLocationByCityReq);
+    List<LocationRes> getLocationListByCity(GetLocationByCityReq getLocationByCityReq);
 }

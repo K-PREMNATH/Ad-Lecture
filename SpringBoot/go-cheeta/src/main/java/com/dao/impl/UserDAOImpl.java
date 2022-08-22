@@ -133,25 +133,30 @@ public class UserDAOImpl implements UserDAO {
         ResultSet resultSet = null;
         try {
             connection = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());
-            String CREATE_DRIVER = "{call insert_update_driver(?,?,?,?,?,?,?,?)}";
+            String CREATE_DRIVER = "{call insert_update_driver(?,?,?,?,?,?,?,?,?,?,?)}";
             callableStatement = connection.prepareCall(CREATE_DRIVER);
+
             callableStatement.setObject(1, driverRegistrationReq.getFirstName(), Types.VARCHAR);
             callableStatement.setObject(2, driverRegistrationReq.getLastName(), Types.VARCHAR);
             callableStatement.setObject(3, driverRegistrationReq.getEmailAddress(), Types.VARCHAR);
             callableStatement.setObject(4, driverRegistrationReq.getAddress(), Types.VARCHAR);
             callableStatement.setObject(5, driverRegistrationReq.getMobileNumber(), Types.VARCHAR);
-            callableStatement.setObject(6, driverRegistrationReq.getUserPassword(), Types.VARCHAR);
+            String pwd = passcodeEncrypt(passcodeEncrypt(driverRegistrationReq.getUserPassword()));
+            callableStatement.setObject(6, pwd, Types.VARCHAR);
             callableStatement.setObject(7, driverRegistrationReq.getVehicleDetailId(), Types.INTEGER);
             callableStatement.setObject(8, driverRegistrationReq.getBranchId(), Types.INTEGER);
+            callableStatement.registerOutParameter(9, Types.BOOLEAN);
+            callableStatement.registerOutParameter(10, Types.INTEGER);
+            callableStatement.registerOutParameter(11, Types.VARCHAR);
             callableStatement.executeUpdate();
-            resultSet = callableStatement.getResultSet();
-            while (resultSet.next()) {
-                commonResponse.setMessage(resultSet.getString("rMsg"));
-                commonResponse.setStatusCode(resultSet.getInt("rStatusCode"));
-                commonResponse.setRes(resultSet.getBoolean("rRes"));
-            }
+
+            commonResponse.setMessage(callableStatement.getString(11));
+            commonResponse.setStatusCode(callableStatement.getInt(10));
+            commonResponse.setRes(callableStatement.getBoolean(9));
         } catch (SQLException exception) {
             exception.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         } finally {
             if (callableStatement != null) {
                 try {
