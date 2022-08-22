@@ -2,7 +2,9 @@ package com.dao.impl;
 
 import com.dao.UserDAO;
 import com.dto.request.CustomerLoginReq;
+import com.dto.request.DriverRegistrationReq;
 import com.dto.request.UserRegistrationReq;
+import com.dto.response.CommonResponse;
 import com.dto.response.GeneralResponse;
 import com.dto.response.UserRegistrationRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -123,5 +122,46 @@ public class UserDAOImpl implements UserDAO {
             exception.printStackTrace();
         }
         return loginStatus;
+    }
+
+    @Override
+    @Transactional
+    public CommonResponse driverRegistration(DriverRegistrationReq driverRegistrationReq) {
+        CommonResponse commonResponse = new CommonResponse();
+        Connection connection = null;
+        CallableStatement callableStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());
+            String CREATE_DRIVER = "{call insert_update_driver(?,?,?,?,?,?,?,?)}";
+            callableStatement = connection.prepareCall(CREATE_DRIVER);
+            callableStatement.setObject(1, driverRegistrationReq.getFirstName(), Types.VARCHAR);
+            callableStatement.setObject(2, driverRegistrationReq.getLastName(), Types.VARCHAR);
+            callableStatement.setObject(3, driverRegistrationReq.getEmailAddress(), Types.VARCHAR);
+            callableStatement.setObject(4, driverRegistrationReq.getAddress(), Types.VARCHAR);
+            callableStatement.setObject(5, driverRegistrationReq.getMobileNumber(), Types.VARCHAR);
+            callableStatement.setObject(6, driverRegistrationReq.getUserPassword(), Types.VARCHAR);
+            callableStatement.setObject(7, driverRegistrationReq.getVehicleDetailId(), Types.INTEGER);
+            callableStatement.setObject(8, driverRegistrationReq.getBranchId(), Types.INTEGER);
+            callableStatement.executeUpdate();
+            resultSet = callableStatement.getResultSet();
+            while (resultSet.next()) {
+                commonResponse.setMessage(resultSet.getString("rMsg"));
+                commonResponse.setStatusCode(resultSet.getInt("rStatusCode"));
+                commonResponse.setRes(resultSet.getBoolean("rRes"));
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        } finally {
+            if (callableStatement != null) {
+                try {
+                    callableStatement.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            DataSourceUtils.releaseConnection(connection, jdbcTemplate.getDataSource());
+        }
+        return commonResponse;
     }
 }

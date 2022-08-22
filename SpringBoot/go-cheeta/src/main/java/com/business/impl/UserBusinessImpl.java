@@ -3,7 +3,9 @@ package com.business.impl;
 import com.business.UserBusiness;
 import com.dao.UserDAO;
 import com.dto.request.CustomerLoginReq;
+import com.dto.request.DriverRegistrationReq;
 import com.dto.request.UserRegistrationReq;
+import com.dto.response.CommonResponse;
 import com.dto.response.GeneralResponse;
 import com.dto.response.UserRegistrationRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +68,23 @@ public class UserBusinessImpl implements UserBusiness {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+        return generalResponse;
+    }
+
+    @Override
+    public GeneralResponse driverRegistration(DriverRegistrationReq driverRegistrationReq) {
+        GeneralResponse generalResponse = new GeneralResponse();
+        CommonResponse commonResponse = userDAO.driverRegistration(driverRegistrationReq);
+        if(commonResponse.getRes()){
+            UserRegistrationRes registrationRes  = userDAO.getUserByEmail(driverRegistrationReq.getEmailAddress());
+            generalResponse.setData(registrationRes);
+            generalResponse.setStatusCode(commonResponse.getStatusCode());
+            generalResponse.setMessage(commonResponse.getMessage());
+        }else {
+            generalResponse.setData(null);
+            generalResponse.setStatusCode(commonResponse.getStatusCode());
+            generalResponse.setMessage(commonResponse.getMessage());
         }
         return generalResponse;
     }

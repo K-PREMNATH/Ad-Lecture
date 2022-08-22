@@ -3,6 +3,7 @@ package com.controller.imp;
 import com.business.UserBusiness;
 import com.controller.UserController;
 import com.dto.request.CustomerLoginReq;
+import com.dto.request.DriverRegistrationReq;
 import com.dto.request.UserRegistrationReq;
 import com.dto.response.GeneralResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,11 @@ public class UserControllerImpl implements UserController {
     @PostMapping("/login/user")
     public GeneralResponse userLogin(@RequestBody CustomerLoginReq customerLoginReq) {
         return userBusiness.userLogin(customerLoginReq);
+    }
+
+    @Override
+    @PostMapping("/create/driver")
+    public GeneralResponse driverRegistration(@RequestBody DriverRegistrationReq driverRegistrationReq) {
+        return userBusiness.driverRegistration(driverRegistrationReq);
     }
 }
